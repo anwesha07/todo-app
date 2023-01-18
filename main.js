@@ -3,7 +3,7 @@ window.onload = () => {
   console.log("ok");
   
   const generateTaskId = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
-  
+
   const newTaskForm = document.getElementById("newTaskForm");
   newTaskForm.addEventListener("submit", (e)=>{
     
@@ -22,22 +22,39 @@ window.onload = () => {
   });
 
   const addTask = (newTaskName, taskId) => {
-    console.log(newTaskName)
+
     let taskList = document.getElementById("taskList");
     const html =
-      `<div class="task" id=${taskId}>
+      `<div class="task" id="${taskId}">
+          
           <div class="content">
+            <input class="check" name="checkbox" type="checkbox" id="taskStatus">
             <input type="text" class="taskName" value="${newTaskName}" readonly>
           </div>
           <div class="actions">
-            <button class="editTask">EDIT</button>
+            <button class="editTask" data-event="edit">EDIT</button>
             <button class="deleteTask">DELETE</button>
           </div>
         </div>`;
     taskList.insertAdjacentHTML('beforeend', html);
 
+    const checkbox = document.querySelector(`#${taskId} input[type=checkbox]`);
+    checkbox.addEventListener('change', (event) => {
+      // console.log(event.target);
+      const inputbox = document.querySelector(`#${taskId} input[type=text]`);
+      console.log(inputbox.value);
+      if (event.target.checked) {
+        console.log("Checkbox is checked..");
+        inputbox.classList.add("taskCompleted");
+
+      } else {
+        console.log("Checkbox is not checked..");
+        inputbox.classList.remove("taskCompleted");
+      }    
+    });
+
     // Edit Button Implementation
-    const editButton = document.getElementById(taskId).children[1].children[0];
+    const editButton = document.querySelector(`#${taskId} button[data-event=edit]`);
     editButton.addEventListener("click", editHandler)
 
     // Delete Button Implementation
@@ -49,7 +66,7 @@ window.onload = () => {
   };
   const editHandler = (editEvent) => {
     const editButton = editEvent.target;
-    const inputBox = editButton.parentElement.parentElement.querySelector("input");
+    const inputBox = editButton.parentElement.parentElement.querySelector("input[type=text]");
 
     if (editButton.innerHTML === "EDIT") {
       editButton.innerHTML = "SAVE";
@@ -76,13 +93,15 @@ window.onload = () => {
 
 
   (async function() {
-    const data = (await fetch('https://jsonplaceholder.typicode.com/todos')
-  .then(response => response.json())).slice(0,5);
+    // const data = (await fetch('https://jsonplaceholder.typicode.com/todos').then(response => response.json())).slice(0, 5);
+    const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+    const data = (await response.json()).slice(0, 5);
   // .then(jsonArray => jsonArray);
 
     // let data = jsonArray.slice(0,5);
   console.log(data);
   data.forEach(element => {
+    element.id = generateTaskId();
     addTask(element.title, element.id);
   });
   

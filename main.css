@@ -38,7 +38,6 @@ header h1 {
 }
 
 input, button {
-    appearance: none;
     border: none;
     outline: none;
     background: none;
@@ -89,6 +88,7 @@ main {
     margin-bottom: 1rem;
  }
 
+
 .task {
     display: flex;
     justify-content: space-between;
@@ -99,6 +99,7 @@ main {
 }
 .task .content {
     width: 100%;
+    display: flex;
 }
 
 .task .content .taskName{
@@ -142,7 +143,13 @@ main {
 .deleteTask {
     color: crimson;
 }
-
+.check {
+    background-color: var(--light);  
+    margin: 5px;  
+ }
+ .taskCompleted {
+    text-decoration: line-through;
+ }
 
 
 
